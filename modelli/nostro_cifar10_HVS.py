@@ -56,7 +56,7 @@ class CEMNet(nn.Module):
         return x
 
 
-saved_data = torch.load('./transformed_cifar10_hsv.pt', weights_only=False)
+saved_data = torch.load('./transformed_imagewoof_hsv_quarter_randomcrop_with_padding.pt', weights_only=False)
 
 train_images = saved_data['train_images']
 train_labels = saved_data['train_labels']
