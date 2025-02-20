@@ -83,4 +83,5 @@ def train_model(conv1_channels=16, conv2_channels=32, fc1_size=256, kernel_size=
 
 # Permette di eseguire il codice principale solo se avviato direttamente
 if __name__ == "__main__":
+    print("➡️ Avvio training con parametri di default")
     train_model()
