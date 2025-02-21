@@ -39,13 +39,20 @@ def train_model(conv1_channels=16, conv2_channels=32, fc1_size=128, kernel_size=
 
     model = ClassicCNN(conv1_channels, conv2_channels, fc1_size, kernel_size).to(device)
 
-    transform = transforms.Compose([
-        transforms.ToTensor(),
-    ])
-    trainset = torchvision.datasets.CIFAR10(root='./data', train=True, download=True, transform=transform)
+    saved_data = torch.load('./dataset/cifar10_RGB.pt', weights_only=False)
+
+    train_images = saved_data['train_images']
+    train_labels = saved_data['train_labels']
+    test_images = saved_data['test_images']
+    test_labels = saved_data['test_labels']
+
+    trainset = torch.utils.data.TensorDataset(train_images, train_labels)
+    testset = torch.utils.data.TensorDataset(test_images, test_labels)
+
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=64, shuffle=True)
-    testset = torchvision.datasets.CIFAR10(root='./data', train=False, download=True, transform=transform)
     testloader = torch.utils.data.DataLoader(testset, batch_size=64, shuffle=False)
+
+    print("Dataset loaded successfully.")
 
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
