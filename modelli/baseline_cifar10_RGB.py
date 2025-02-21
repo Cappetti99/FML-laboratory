@@ -29,7 +29,7 @@ class ClassicCNN(nn.Module):
         x = self.fc2(x)
         return x
 
-def train_model(conv1_channels=16, conv2_channels=32, fc1_size=128, kernel_size=5, num_epochs=5):
+def train_model(conv1_channels=16, conv2_channels=32, fc1_size=128, kernel_size=5, number_epochs=5):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
 
@@ -46,7 +46,7 @@ def train_model(conv1_channels=16, conv2_channels=32, fc1_size=128, kernel_size=
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
 
-    for epoch in tqdm(range(num_epochs)):
+    for epoch in tqdm(range(number_epochs)):
         correct = 0
         total = 0
         running_loss = 0.0
@@ -62,7 +62,7 @@ def train_model(conv1_channels=16, conv2_channels=32, fc1_size=128, kernel_size=
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
         accuracy = 100 * correct / total
-        print(f'Epoca [{epoch+1}/{num_epochs}], Loss: {running_loss/len(trainloader):.4f}, Accuracy: {accuracy:.2f}%')
+        print(f'Epoca [{epoch+1}/{number_epochs}], Loss: {running_loss/len(trainloader):.4f}, Accuracy: {accuracy:.2f}%')
 
     model.eval()
     correct = 0
