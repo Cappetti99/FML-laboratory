@@ -4,6 +4,8 @@ import torch.optim as optim
 import torch.fft
 from tqdm import tqdm
 import numpy as np
+import time
+
 
 
 def to_frequency_domain(x):
@@ -29,9 +31,12 @@ class FrequencyConv(nn.Module):
         out_freq = x.unsqueeze(1) * kernel_freq
         return out_freq.sum(dim=2)
     
-class CEMNet(nn.Module):
+class NostroMinst(nn.Module):
     def __init__(self,conv1_channels, conv2_channels, fc1_size, kernel_size):
-        super(CEMNet, self).__init__()
+        super(NostroMinst, self).__init__()
+        print("Modello= Nostro Minst")
+        print(f"Kernel: {kernel_size}, Conv1: {conv1_channels}, Conv2: {conv2_channels}, FC1: {fc1_size}")
+
         self.conv1 = FrequencyConv(1, conv1_channels, kernel_size)
         self.conv2 = FrequencyConv(conv1_channels, conv2_channels, kernel_size)
         self.fc1 = None
@@ -59,6 +64,7 @@ class CEMNet(nn.Module):
 
 def train_model(conv1_channels=8, conv2_channels=16, fc1_size=128, kernel_size=3,number_epochs=5):
 
+    start_time = time.time()  # Salva il tempo di inizio
 
     saved_data = torch.load('./dataset/transformed_mnist.pt',weights_only=False)
 
@@ -76,7 +82,7 @@ def train_model(conv1_channels=8, conv2_channels=16, fc1_size=128, kernel_size=3
     print("Dataset loaded successfully.")
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(device)
-    model = CEMNet(conv1_channels, conv2_channels, fc1_size, kernel_size).to(device)
+    model = NostroMinst(conv1_channels, conv2_channels, fc1_size, kernel_size).to(device)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
 
@@ -112,6 +118,10 @@ def train_model(conv1_channels=8, conv2_channels=16, fc1_size=128, kernel_size=3
 
     test_accuracy = 100 * correct / total
     print(f'Accuracy sui test: {test_accuracy:.2f}%')
+    end_time = time.time()  # Salva il tempo di fine
+    execution_time = end_time - start_time  # Calcola il tempo trascorso
+
+    print(f"Tempo di esecuzione: {execution_time:.4f} secondi")
 
 if __name__ == "__main__":
     print("➡️ Avvio training con parametri di default")

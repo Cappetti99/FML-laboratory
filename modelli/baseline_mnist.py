@@ -4,11 +4,14 @@ import torch.optim as optim
 import torchvision
 import torchvision.transforms as transforms
 from tqdm import tqdm
+import time
+
 
 def create_model(conv1_channels, conv2_channels, fc1_size, kernel_size):
     class ClassicCNN(nn.Module):
         def __init__(self):
             super(ClassicCNN, self).__init__()
+            print("Modello= Baseline Minst")
             print(f"Kernel: {kernel_size}, Conv1: {conv1_channels}, Conv2: {conv2_channels}, FC1: {fc1_size}")
             self.conv1 = nn.Conv2d(1, conv1_channels, kernel_size, padding=2)
             self.conv2 = nn.Conv2d(conv1_channels, conv2_channels, kernel_size, padding=2)
@@ -33,6 +36,7 @@ def create_model(conv1_channels, conv2_channels, fc1_size, kernel_size):
 
 # Funzione per addestrare il modello
 def train_model(conv1_channels=16, conv2_channels=32, fc1_size=256, kernel_size=3, number_epochs=5):
+    start_time = time.time()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
 
@@ -79,6 +83,10 @@ def train_model(conv1_channels=16, conv2_channels=32, fc1_size=256, kernel_size=
 
     test_accuracy = 100 * correct / total
     print(f'Accuracy sui test: {test_accuracy:.2f}%')
+    end_time = time.time()  # Salva il tempo di fine
+    execution_time = end_time - start_time  # Calcola il tempo trascorso
+
+    print(f"Tempo di esecuzione: {execution_time:.4f} secondi")
 
 # Permette di eseguire il codice principale solo se avviato direttamente
 if __name__ == "__main__":
